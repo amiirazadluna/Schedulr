@@ -9,7 +9,7 @@ class Schedule {
     $id;
     
   public function __construct($id) {
-    $this->id = $id;
+    $this->id = mysql_real_escape_string($id);
   }
   
   public function getID() {
@@ -64,6 +64,7 @@ class Schedule {
   
   public function addCourse($courseID) {
     // Check if it's already in the schedule
+    $courseID = mysql_real_escape_string($courseID);
     $courseIDs = $this->getCourseIDs();
     if(!array_key_exists($courseID, $courseIDs)) 
       DBQuery("INSERT INTO schedule_to_course VALUES (".$this->id.",
@@ -71,6 +72,7 @@ class Schedule {
   }
 
   public function removeCourse($courseID) {
+    $courseID = mysql_real_escape_string($courseID);
     DBQuery("DELETE FROM schedule_to_course ".
                    "WHERE scheduleid=".$this->id." ". 
                    "AND courseid=".$courseID);

@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/course.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
 
-$id = $_GET['id'];
+$id = mysql_real_escape_string($_GET['id']);
 
 $result = DBQuery("SELECT count(courseid) FROM courses WHERE courseid=".$id);
 

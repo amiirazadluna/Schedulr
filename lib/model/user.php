@@ -9,7 +9,7 @@ class User {
     $uniqname;
   
   public function __construct($uniqname) {
-    $this->uniqname = $uniqname;
+    $this->uniqname = mysql_real_escape_string($uniqname);
   }
   
   public function getUniqname() {

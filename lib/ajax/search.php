@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/util/db.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
-$search = strtoupper($_GET['query']);
+$search = mysql_real_escape_string(strtoupper($_GET['query']));
   
 // let's get through our special cases first:
 // tech comm

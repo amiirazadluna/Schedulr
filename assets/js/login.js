@@ -13,20 +13,23 @@ function submitLogin() {
       alert("passwords don't match");
       return false;
     }
-  }
-
-  else {
+  } else {
+    var error = false;
     // Check if uniqname currently exists
-    xmlhttp=new XMLHttpRequest();
-    xmlhttp.open("GET","/lib/ajax/checkuniqname.php?uniqname="+$(uniqname).val(),false);
-    xmlhttp.send();
-    if(xmlhttp.responseText == 0) {
-      $(".login-form-small").addClass("login-form-large");
-      $(".login-form-large").removeClass("login-form-small");
-      $(submit_type).val("signup");
-      $(signup_message).removeClass("hidden");
-      $(password2).removeClass("hidden");
-      return false;
-    }
+    $.ajax({
+      url: "/lib/ajax/checkuniqname.php",
+      data: { uniqname: $(uniqname).val() }
+    }).done(function(data) {
+      if(data == 0) {
+        $(".login-form-small").addClass("login-form-large");
+        $(".login-form-large").removeClass("login-form-small");
+        $(submit_type).val("signup");
+        $(signup_message).removeClass("hidden");
+        $(password2).removeClass("hidden");
+        error = true;
+      }    
+    });
   }
+  if(error)
+    return false;
 }

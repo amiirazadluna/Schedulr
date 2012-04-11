@@ -30,7 +30,8 @@ class Course {
   );
   
   public function __construct($id, $offset = 0) {
-    $this->id = $id;
+    $this->id = mysql_real_escape_string($id);
+    $offset = mysql_real_escape_string($offset);
     
     // load all data
     $result = mysql_fetch_assoc(DBSelectCourses("courseid=".$id." LIMIT ".$offset.",1"));

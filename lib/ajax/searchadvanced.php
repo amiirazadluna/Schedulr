@@ -3,12 +3,12 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/util/db.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
-$dept = $_GET['dept'];
-$num_cmp = $_GET['num_select'];
-$num = $_GET['num'];
-$dist = $_GET['dist'];
-$credits = $_GET['credits'];
-$prof = $_GET['prof'];
+$dept = mysql_real_escape_string($_GET['dept']);
+$num_cmp = mysql_real_escape_string($_GET['num_select']);
+$num = mysql_real_escape_string($_GET['num']);
+$dist = mysql_real_escape_string($_GET['dist']);
+$credits = mysql_real_escape_string($_GET['credits']);
+$prof = mysql_real_escape_string($_GET['prof']);
 
 if($dept) {
   $query .= "dept='".strtoupper($dept)."'";

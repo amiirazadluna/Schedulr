@@ -2,6 +2,8 @@
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/conf/db.php');
 
+DBConnect();
+
 function DBConnect() {
   global $db_server, $db_username, $db_password, $db_database;
   $db_handle=mysql_connect($db_server, $db_username, $db_password) or die("mrah");
@@ -12,15 +14,11 @@ function DBConnect() {
 }
 
 function DBQuery($query) {
-  DBConnect();
-  mysql_real_escape_string($query);
   $result = mysql_query($query) or die(mysql_error());
   return $result;
 }
 
 function DBQueryIgnoreError($query) {
-  DBConnect();
-  mysql_real_escape_string($query);
   $result = mysql_query($query);
   return $result;
 }

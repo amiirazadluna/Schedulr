@@ -2,8 +2,8 @@
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/util/db.php');
 
-$uniqname = $_POST['uniqname'];
-$password = $_POST['password'];
+$uniqname = mysql_real_escape_string($_POST['uniqname']);
+$password = mysql_real_escape_string($_POST['password']);
 
 // signing up
 if($_POST['submit_type'] == "signup") {
