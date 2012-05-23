@@ -50,9 +50,13 @@ if(isset($_SESSION['user'])) {
           onsubmit="return submitLogin();" 
           class="span5"
           method="POST">
-          <h3>Login or Signup</h3><br/>
-          <div>
-            If you are new here, enter your uniqname, and the password you would like to use for this site.<br/>
+          <h3>Login</h3> 
+          <br/>
+          <div id="login_instructions">
+            New here? <a href="#" onclick="addSignup()">Sign Up</a>
+          </div>
+          <div id="signup_instructions" class="hidden">
+            Already have an account? <a href="#" onclick="removeSignup()">Log in</a><br/><br/>
             DO NOT use your kerberos password!
           </div>
           <br/>

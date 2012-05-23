@@ -5,6 +5,18 @@ function removeSignup() {
   $(submit_type).val("login");
   $(".login-form-large").addClass("login-form-small");
   $(".login-form-small").removeClass("login-form-large");
+  $(signup_instructions).addClass("hidden");
+  $(login_instructions).removeClass("hidden");
+}
+
+function addSignup() {
+  $(password2).removeClass("hidden");
+  $(password2).val("");
+  $(submit_type).val("signup");
+  $(".login-form-small").addClass("login-form-large");
+  $(".login-form-large").removeClass("login-form-small");
+  $(signup_instructions).removeClass("hidden");
+  $(login_instructions).addClass("hidden");
 }
 
 function submitLogin() {
@@ -21,11 +33,8 @@ function submitLogin() {
       data: { uniqname: $(uniqname).val() }
     }).done(function(data) {
       if(data == 0) {
-        $(".login-form-small").addClass("login-form-large");
-        $(".login-form-large").removeClass("login-form-small");
-        $(submit_type).val("signup");
         $(signup_message).removeClass("hidden");
-        $(password2).removeClass("hidden");
+        addSignup();
       }
     });
   }
