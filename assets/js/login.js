@@ -14,9 +14,9 @@ function submitLogin() {
       return false;
     }
   } else {
-    var error = false;
     // Check if uniqname currently exists
     $.ajax({
+      async: false,
       url: "/lib/ajax/checkuniqname.php",
       data: { uniqname: $(uniqname).val() }
     }).done(function(data) {
@@ -26,10 +26,9 @@ function submitLogin() {
         $(submit_type).val("signup");
         $(signup_message).removeClass("hidden");
         $(password2).removeClass("hidden");
-        error = true;
-      }    
+      }
     });
   }
-  if(error)
+  if($(submit_type).val() == "signup") 
     return false;
 }
