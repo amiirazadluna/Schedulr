@@ -37,7 +37,7 @@ abstract class :xhp:html-element extends :x:primitive {
     string onkeypress, string onkeyup, string onload, string onmousedown,
     string onmousemove, string onmouseout, string onmouseover, string onmouseup,
     string onreset, string onresize, string onselect, string onsubmit,
-    string onunload,
+    string onunload, string data-toggle,
 
     // IE only
     string onmouseenter, string onmouseleave,

@@ -6,6 +6,7 @@ if (!$_SESSION['user'])
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/user.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/uiClassSignup.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
 $user = new User($_SESSION['user']);
@@ -53,6 +54,7 @@ session_write_close();
     </script>
     <script type="text/javascript" src="/assets/js/schedule.js"></script>
     <script type="text/javascript" src="/assets/js/calendar.js"></script>
+    <script type="text/javascript" src="/assets/js/bootstrap-modal.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/css/master.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/calendar.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
@@ -73,10 +75,6 @@ session_write_close();
     </script>
   </head>
   <body>
-    <div id="shadow" class="hidden">
-    </div>
-    <div id="alert-message" class="hidden">
-    </div>
     <div class="container">
       <div class="page-header">
         <h1>
@@ -85,7 +83,7 @@ session_write_close();
         </h1>
       </div>
       <?php 
-        if($_GET['from'] == "fb")
+        if(isset($_GET['from']) && $_GET['from'] == "fb")
           echo <h3>Successfully posted to Facebook!</h3>;
       ?>
 
@@ -97,13 +95,13 @@ session_write_close();
           $list = <div class="pull-left btn-group"></div>;
           
           $user = new User($_SESSION['user']);
-          $schedules = $user->getScheduleIDs();
+          $schedule_ids = $user->getScheduleIDs();
 
-          foreach($schedules as $i => $schedule) {
+          foreach($schedule_ids as $i => $schedule_id) {
             $name = "Schedule #".($i+1);
-            $url = "/schedule/$schedule";
+            $url = "/schedule/$schedule_id";
             $item = <a class="btn" href={$url}>{$name}</a>;
-            if($_GET['schedule'] == $schedule)
+            if($_GET['schedule'] == $schedule_id)
               $item->addClass("btn-info");
             $list->appendChild($item);
           }
@@ -122,7 +120,7 @@ session_write_close();
             );
             $right_buttons->appendChild(
               <div class="btn-group">
-                <a onclick="showSignup()" class="btn">
+                <a class="btn" data-toggle="modal" href="#signupModal">
                   Register
                 </a>
               </div>
@@ -143,6 +141,11 @@ session_write_close();
 
       <?php if($schedule_id) { ?>
       <br/>
+
+      <!-- Hidden modal dialog for registering for classes -->
+      <?php
+        echo <sc:class-signup schedule={$schedule} />;
+      ?>
 
       <!-- Hidden form for sharing schedule -->
       <?php
