@@ -75,9 +75,9 @@ function search($query) {
   while($row = mysql_fetch_assoc($result)) {
     $courseID = $row['courseid'];
     require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/course.php');
-    require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/uiCourseInfo.php');
+    require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/search/course-info.php');
     $ret->appendChild(
-        <sc:course-info course={new Course($courseID)} />
+        <sc:search:course-info course={new Course($courseID)} />
     );
   } 
   return $ret;

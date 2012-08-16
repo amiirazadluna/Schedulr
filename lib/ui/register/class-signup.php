@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
-class :sc:class-signup extends :x:element {
+class :sc:register:class-signup extends :x:element {
   attribute
     Schedule schedule @required;
 

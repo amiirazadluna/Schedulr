@@ -6,7 +6,7 @@ if (!$_SESSION['user'])
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/user.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/uiClassSignup.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/register/class-signup.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
 $user = new User($_SESSION['user']);
@@ -144,7 +144,7 @@ session_write_close();
 
       <!-- Hidden modal dialog for registering for classes -->
       <?php
-        echo <sc:class-signup schedule={$schedule} />;
+        echo <sc:register:class-signup schedule={$schedule} />;
       ?>
 
       <!-- Hidden form for sharing schedule -->

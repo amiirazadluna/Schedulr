@@ -157,3 +157,9 @@ function removeCourse(id) {
     calendar.init();
   })
 }
+
+function shareSchedule() {
+  var data = calendar.canvas.toDataURL();
+  $("#img_data").val(data);
+  $("#share_form").submit();
+}

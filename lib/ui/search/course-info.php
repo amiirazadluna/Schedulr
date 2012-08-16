@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/course.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
-class :sc:course-info extends :x:element {
+class :sc:search:course-info extends :x:element {
   attribute
     Course course @required;
 
