@@ -7,6 +7,7 @@ if (!$_SESSION['user'])
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/user.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/register/class-signup.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/nav/nav-bar.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
 $user = new User($_SESSION['user']);
@@ -18,6 +19,7 @@ if(isset($_GET['new'])) {
   exit;
 }
 
+$schedule = null;
 if(isset($_GET['schedule'])) {
   $schedule_id = $_GET['schedule'];
   $schedule = new Schedule($schedule_id);
@@ -44,7 +46,7 @@ session_write_close();
       <?php
         echo "var user = '".$_SESSION['user']."';"; 
         echo "var newuser = ".$user->isNewUser().";";
-        if($schedule_id)
+        if(isset($schedule_id))
           echo "var schedule = ".$schedule_id.";"; 
       ?>
     </script>
@@ -82,62 +84,14 @@ session_write_close();
           <a class="btn pull-right" href="/logout">Logout</a>
         </h1>
       </div>
+
       <?php 
         if(isset($_GET['from']) && $_GET['from'] == "fb")
           echo <h3>Successfully posted to Facebook!</h3>;
       ?>
 
       <!-- Top row buttons -->
-      <div class="row">
-        <div class="span12">
-        <?php
-          $header_buttons = <div class="btn-toolbar"></div>;
-          $list = <div class="pull-left btn-group"></div>;
-          
-          $user = new User($_SESSION['user']);
-          $schedule_ids = $user->getScheduleIDs();
-
-          foreach($schedule_ids as $i => $schedule_id) {
-            $name = "Schedule #".($i+1);
-            $url = "/schedule/$schedule_id";
-            $item = <a class="btn" href={$url}>{$name}</a>;
-            if($_GET['schedule'] == $schedule_id)
-              $item->addClass("btn-info");
-            $list->appendChild($item);
-          }
-          $list->appendChild(<a class="btn" href="/schedule/new">New</a>);
-
-          $header_buttons->appendChild($list);
-          $right_buttons = <div class="pull-right"></div>;
-          if(isset($_GET['schedule'])) {
-            $url = "/delete/".$_GET['schedule'];
-            $right_buttons->appendChild(
-              <div class="btn-group">
-                <a onclick="shareSchedule()" class="btn">
-                  Share
-                </a>
-              </div>
-            );
-            $right_buttons->appendChild(
-              <div class="btn-group">
-                <a class="btn" data-toggle="modal" href="#signupModal">
-                  Register
-                </a>
-              </div>
-            );
-            $right_buttons->appendChild(
-              <div class="btn-group">
-                <a href={$url} class="btn btn-danger">
-                  Delete
-                </a>
-              </div>
-            );
-          }
-          $header_buttons->appendChild($right_buttons);
-          echo $header_buttons;
-        ?>
-        </div>
-      </div>
+      <?php echo <sc:nav:nav-bar user={$user} schedule={$schedule} /> ?>
 
       <?php if($schedule_id) { ?>
       <br/>
