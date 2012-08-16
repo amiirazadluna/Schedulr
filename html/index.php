@@ -6,35 +6,28 @@ if (!$_SESSION['user'])
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/user.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/register/class-signup.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/nav/nav-bar.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/schedule/schedule-view.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
 $user = new User($_SESSION['user']);
 
 // Create a new schedule
 if(isset($_GET['new'])) {
-  $schedule_id = $user->newSchedule();
-  header("Location: /schedule/$schedule_id");
+  header("Location: /schedule/".$user->newSchedule());
   exit;
 }
 
 $schedule = null;
 if(isset($_GET['schedule'])) {
-  $schedule_id = $_GET['schedule'];
-  $schedule = new Schedule($schedule_id);
+  $schedule = new Schedule($_GET['schedule']);
 
-  if($schedule->getOwnerID() != $_SESSION['user'] && $_SESSION['user'] != 'kgaurav') {
+  if($schedule->getOwnerID() != $user->getID() && $user->getID() != 'kgaurav') {
     // Not correct owner, go to home
     header("Location: /"); 
     exit;
   }
 }
-
-// Create token for posting image data through share button
-$token = md5(uniqid());
-$_SESSION['img_token'] = $token;
-session_write_close();
 
 ?>
  
@@ -44,10 +37,10 @@ session_write_close();
     <script type="text/javascript">
       var trial = false;
       <?php
-        echo "var user = '".$_SESSION['user']."';"; 
+        echo "var user = '".$user->getID()."';"; 
         echo "var newuser = ".$user->isNewUser().";";
-        if(isset($schedule_id))
-          echo "var schedule = ".$schedule_id.";"; 
+        if($schedule)
+          echo "var schedule = ".$schedule->getID().";"; 
       ?>
     </script>
     <script 
@@ -84,126 +77,13 @@ session_write_close();
           <a class="btn pull-right" href="/logout">Logout</a>
         </h1>
       </div>
-
       <?php 
         if(isset($_GET['from']) && $_GET['from'] == "fb")
           echo <h3>Successfully posted to Facebook!</h3>;
+
+        echo <sc:nav:nav-bar user={$user} schedule={$schedule} />;
+        echo <sc:schedule:schedule-view user={$user} schedule={$schedule} />;
       ?>
-
-      <!-- Top row buttons -->
-      <?php echo <sc:nav:nav-bar user={$user} schedule={$schedule} /> ?>
-
-      <?php if($schedule_id) { ?>
-      <br/>
-
-      <!-- Hidden modal dialog for registering for classes -->
-      <?php
-        echo <sc:register:class-signup schedule={$schedule} />;
-      ?>
-
-      <!-- Hidden form for sharing schedule -->
-      <?php
-      
-      $url = "/share/".$_SESSION['user']."/".$schedule_id;
-
-      echo
-        <form id="share_form" action={$url} method="post">
-          <input type="hidden" name="img_data" id="img_data"></input>
-          <input type="hidden" name="img_token" value={$token}></input>
-        </form>;
-    
-      ?>
-
-      <div class="row">
-
-        <!-- Calendar -->
-        <div class="span8">
-          <div id="div-calendar" style="position: absolute"></div>
-          <canvas id="canvas-calendar" width="620px"></canvas>
-        </div>
-
-        <!-- Search -->
-        <div class="span4">
-          <input id="search-type" type="hidden" value="basic">
-
-          <!-- Basic Search Form -->
-          <div id="basic-search"> 
-            <input id="query" type="text" class="input-medium search-query">
-            <span class="pull-right btn-group">
-              <button class="btn" onclick="search()">Search</button>
-              <button class="btn" onclick="showAdvancedSearch()">Advanced</button>
-            </span>
-          </div>
-
-          <!-- Advanced Search Form -->
-          <div class="form-horizontal hidden" id="advanced-search" >
-            <fieldset>
-              <div class="control-group">
-                <label class="control-label" for="in_dept">Department:</label>
-                <div class="controls">
-                  <input id="in_dept" type="text" class="input-medium" placeholder="department" />
-                </div>
-              </div>
-              <div class="control-group">
-                <label class="control-label" for="in_num">Course Number:</label>
-                <div class="controls">
-                  <select id="num_select" style="width: 50px">
-                    <option><</option>
-                    <option selected>=</option>
-                    <option>></option>
-                  </select>
-                  <input id="in_num" type="text" class="input-small" placeholder="num" />
-                </div>
-              </div>
-              <div class="control-group">
-                <label class="control-label" for="in_dist">Distributions:</label>
-                <div class="controls">
-                  <select style="width: 145px" multiple="multiple" id="in_dist">
-                    <option>CE</option>
-                    <option>HU</option>
-                    <option>SS</option>
-                    <option>ID</option>
-                    <option>MSA</option>
-                    <option>NS</option>
-                  </select>
-                </div>
-              </div>
-              <div class="control-group">
-                <label class="control-label" for="in_credits">Credits:</label>
-                <div class="controls">
-                  <select style="width: 145px" multiple="multiple" id="in_credits">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5+</option>
-                  </select>
-                </div>
-              </div>
-              <div class="control-group">
-                <label class="control-label" for="in_prof">Professor:</label>
-                <div class="controls">
-                  <input id="in_prof" type="text" class="input-medium" placeholder="professor" />
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="btn" onclick="closeAdvancedSearch()">Back</button>
-                <button class="btn" onclick="search()">Search</button>
-              </div>
-            </fieldset>
-          </div>
-          
-          <!-- New User Tour -->
-          <div id="nux1">
-            <br/>
-            <h3>Search for a class to get started</h3>
-          </div>
-
-          <!-- Search Results -->
-          <div id="results"></div>
-        </div>
-      </div>
-      <?php } ?>
     </div>
   </body>
 </html>

@@ -210,6 +210,12 @@ class :button extends :xhp:html-element {
   protected $tagName = 'button';
 }
 
+class :canvas extends :xhp:html-singleton {
+  attribute string width, string height;
+  category %flow, %interactive;
+  protected $tagName = 'canvas';
+}
+
 class :caption extends :xhp:html-element {
   // may not contain table
   children (pcdata | %flow)*;

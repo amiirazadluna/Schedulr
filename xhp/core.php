@@ -580,25 +580,29 @@ abstract class :x:element extends :x:composable-element {
   final public function __toString() {
     $that = $this;
 
-    if (:x:base::$ENABLE_VALIDATION) {
-      // Validate the current object
-      $that->validateChildren();
-
-      // And each intermediary object it returns
-      while (($that = $that->render()) instanceof :x:element) {
+    try {
+      if (:x:base::$ENABLE_VALIDATION) {
+        // Validate the current object
         $that->validateChildren();
+
+        // And each intermediary object it returns
+        while (($that = $that->render()) instanceof :x:element) {
+          $that->validateChildren();
+        }
+
+        // render() must always return XHPPrimitives
+        if (!($that instanceof :x:composable-element)) {
+          throw new XHPCoreRenderException($this, $that);
+        }
+      } else {
+        // Skip the above checks when not validating
+        while (($that = $that->render()) instanceof :x:element);
       }
 
-      // render() must always return XHPPrimitives
-      if (!($that instanceof :x:composable-element)) {
-        throw new XHPCoreRenderException($this, $that);
-      }
-    } else {
-      // Skip the above checks when not validating
-      while (($that = $that->render()) instanceof :x:element);
+      return $that->__toString();
+    } catch (Exception $e) {
+      trigger_error($e->getMessage(), E_USER_ERROR);
     }
-
-    return $that->__toString();
   }
 }
 

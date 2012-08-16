@@ -15,6 +15,10 @@ class User {
   public function getUniqname() {
     return $this->uniqname;
   }
+
+  public function getID() {
+    return $this->uniqname;
+  }
   
   public function getScheduleIDs() {
     $result = DBSelectSchedules("owner='".$this->uniqname."' order by id");
