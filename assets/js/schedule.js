@@ -1,8 +1,8 @@
 // Check if new user
 $(document).ready(function() {
+  $("#nux1").hide();
   if(trial)
     return;
-  $("#nux1").hide();
   if(newuser && schedule) {
     $("#nux1").delay(300).fadeIn(500); 
     $("#query").focus(function() {
