@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/schedule.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/model/user.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/register/class-signup.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/schedule/calendar.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/calendar/calendar.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/schedule/share-form.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/ui/search/search-area.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
@@ -28,12 +28,13 @@ class :sc:schedule:schedule-view extends :x:element {
         <sc:schedule:share-form user={$user} schedule={$schedule} />
         <div class="row">
           <div class="span8">
-            <sc:schedule:calendar />
+            <sc:calendar schedule={$schedule} />
           </div>
           <div class="span4">
             <sc:search:search-area />
           </div>
         </div>
+        <canvas id="canvas-calendar" style="display: none" width="620px" />
       </x:frag>;
   }
 }

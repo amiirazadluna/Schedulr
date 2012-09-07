@@ -33,7 +33,7 @@ function addEventHandlers() {
     },
     mouseleave: function(event) {
       if(event.target === this) {
-        unghostCourse();
+        unghostCourses();
       }
     }
   });
@@ -95,21 +95,11 @@ function search() {
 }
 
 function addCourse(id) {
-  for(i in calendar.ghosts) {
-    if(calendar.ghosts[i].id == id)
-      calendar.courses.push(calendar.ghosts[i]);
-  } 
-
-  if(trial) {
-    calendar.redraw();
-    return;
-  }
+  $(".ghost").removeClass("ghost");
 
   $.ajax({
     url: "/lib/ajax/addclass.php",
     data: {id:id, schedule:schedule},
-  }).done(function() {
-    calendar.init();
   });
 
   // No longer a new user!
@@ -120,31 +110,21 @@ function addCourse(id) {
 }
 
 function ghostCourse(id) {
-  calendar.redraw();
+  unghostCourses();
   $.ajax({
     url: "/lib/ajax/ghostclass.php",
     data: {id: id},
-    dataType: "json"
   }).done(function(data) {
-    for(i in data) {
-      calendar.drawCourse(data[i], true);
-      calendar.ghosts = data;
-    }
+    $("#calendarBackground").append(data);
   });
 }
 
-function unghostCourse(e) {
-  calendar.redraw();
+function unghostCourses() {
+  $(".ghost").remove();
 }
 
 function removeCourse(id) {
-  var newCourses = new Array();
-  for(i in calendar.courses) {
-    if(calendar.courses[i].id != id)
-      newCourses.push(calendar.courses[i]);
-  }
-  calendar.courses = newCourses;
-  calendar.redraw();
+  $("."+id).remove();
 
   if(trial)
     return;
@@ -152,14 +132,9 @@ function removeCourse(id) {
   $.ajax({
     url: "/lib/ajax/removeclass.php",
     data: {id: id, schedule: schedule}
-  }).fail(function() {
-    console.log("Something went wrong");
-    calendar.init();
-  })
+  });
 }
 
 function shareSchedule() {
-  var data = calendar.canvas.toDataURL();
-  $("#img_data").val(data);
-  $("#share_form").submit();
+  calendar.init();
 }

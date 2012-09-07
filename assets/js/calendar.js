@@ -3,29 +3,22 @@ var calendar = {
     this.canvas = document.getElementById('canvas-calendar');
     this.context = this.canvas.getContext('2d');
 
-    if(trial) {
-      this.courses = new Array();
-      this.redraw();
-    } else {
-      $.ajax({
-        url: "/lib/ajax/getscheduleclasses.php",
-        data: { id: schedule },
-        dataType: 'json',
-        context: calendar
-      }).done(function(data) {
-        this.courses = data;
-        this.redraw();
-      });
-    }
-  },
-
-  redraw: function() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    $(".close").remove();
-    this.drawBackground(8, 18);
-    for(i in this.courses) {
-      this.drawCourse(this.courses[i]);
-    }
+    $.ajax({
+      url: "/lib/ajax/getscheduleclasses.php",
+      data: { id: schedule },
+      dataType: 'json',
+      context: calendar
+    }).done(function(data) {
+      courses = data;
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.drawBackground(8, 18);
+      for(i in courses) {
+        this.drawCourse(courses[i]);
+      }
+      var data = this.canvas.toDataURL();
+      $("#img_data").val(data);
+      $("#share_form").submit();
+    });
   },
   
   drawBackground: function(start, end) {
@@ -64,10 +57,8 @@ var calendar = {
     this.context.fillText("Fri", 562, 7);
   },
 
-  drawCourse: function(course, ghost) {
+  drawCourse: function(course) {
     this.context.font = "normal 12px sans-serif";
-    if(ghost === true)
-      this.context.globalAlpha = 0.5;
     // for each day 
     for(i in course["days"]) {
       // Draw background
@@ -85,19 +76,7 @@ var calendar = {
       var courseName = course["dept"] + " " + course["num"];
       this.context.fillText(courseName, x1 + 5, y1 + 5);
       this.context.fillText(course["location"], x1 + 5, y1 + 25);
-
-      // Draw x
-      $("#div-calendar").append(
-        "<a  \
-          style='position: absolute; top: "+(y1)+"px; left: "+(x2-15)+"' \
-          class='close' \
-          onclick='removeCourse("+course["id"]+")'> \
-          &times; \
-        </a>"
-      );
-    }
-
-    this.context.globalAlpha = 1;
+   }
   },
 
   /* Helper functions */
@@ -155,5 +134,3 @@ var calendar = {
     this.context.stroke();
   },
 };
-
-$(document).ready(function() { calendar.init(); });
