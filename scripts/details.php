@@ -1,5 +1,6 @@
 <?php
   require_once('../util/db.php');
+  require_once($_SERVER['DOCUMENT_ROOT'].'/xhp/init.php');
 
   $select = "
     SELECT dept, catalognum, section
@@ -14,6 +15,7 @@
     $filename = 'http://www.lsa.umich.edu/cg/cg_detail.aspx?content=1910';
 
     $file = file_get_contents($filename.$dept.$num.$section);
+
     $startpos = strpos($file, "lblDist");
     if($startpos === false) {
       $req = "";
@@ -24,11 +26,22 @@
       $req = substr($file, $startpos, $length);
       $write = "UPDATE courses SET req='".$req."' WHERE dept='".$dept."' AND catalognum='".$num."'";
       DBQueryIgnoreError($write);
-  
     }
-      echo "req : ".$req."\n";
-      echo "class : ".$dept.$num."\n\n";
+
+    $startpos = strpos($file, "ctl00_MainContent_lblDescr");
+    if($startpos === false) {
+      $desc = "";
+    } else {
+      $startpos = strpos($file, ">", $startpos) + 1;
+      $endpos = strpos($file, "</span>", $startpos);
+      $length = $endpos - $startpos;
+      $desc = mysql_real_escape_string(substr($file, $startpos, $length));
+
+      $write = "UPDATE courses SET `desc`='".$desc."' WHERE dept='".$dept."' AND catalognum='".$num."'";
+      DBQueryIgnoreError($write);
+    }
   }
+
   echo "I'm Done";
 ?>
   
