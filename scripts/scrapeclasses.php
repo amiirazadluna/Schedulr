@@ -2,7 +2,7 @@
 
   require_once('../util/db.php');
 
-  if (($handle = fopen("http://www.ro.umich.edu/timesched/pdf/FA2012.csv", "r")) !== FALSE) {
+  if (($handle = fopen("http://www.ro.umich.edu/timesched/pdf/WN2013.csv", "r")) !== FALSE) {
     DBQuery("TRUNCATE TABLE courses");
     $data = fgetcsv($handle, 1000, ',');
     while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {

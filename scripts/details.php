@@ -12,7 +12,7 @@
     $dept = $row['dept'];
     $num = $row['catalognum'];
     $section = str_pad($row['section'], 3, "0", STR_PAD_LEFT);
-    $filename = 'http://www.lsa.umich.edu/cg/cg_detail.aspx?content=1910';
+    $filename = 'http://www.lsa.umich.edu/cg/cg_detail.aspx?content=1920';
 
     $file = file_get_contents($filename.$dept.$num.$section);
 
