@@ -38,6 +38,4 @@ function submitLogin() {
       }
     });
   }
-  if($(submit_type).val() == "signup") 
-    return false;
 }
